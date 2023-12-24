@@ -3,12 +3,11 @@ package ru.gb.notebook.model.comparator;
 import java.util.Iterator;
 import java.util.List;
 
-public class NotebookIterator<T extends NotebookIterator> implements Iterator<T> {
+public class NotebookIterator<E> implements Iterator<E> {
     private int index;
-    private List<T> list;
+    private List<E> list;
 
-    public NotebookIterator(List<T> list) {
-        index = 0;
+    public NotebookIterator(List<E> list) {
         this.list = list;
     }
 
@@ -18,7 +17,7 @@ public class NotebookIterator<T extends NotebookIterator> implements Iterator<T>
     }
 
     @Override
-    public T next() {
+    public E next() {
         return list.get(index++);
     }
 }

@@ -5,28 +5,17 @@ import ru.gb.notebook.presenter.Presenter;
 import java.util.Scanner;
 
 public class Console implements View {
-    private Presenter presenter;
+    private static final String INPUT_ERROR = "Вы ввели неверное значение";
     private Scanner scanner;
+    private Presenter presenter;
     private boolean work;
     private Menu menu;
 
     public Console() {
         scanner = new Scanner(System.in);
-        this.work = true;
+        presenter = new Presenter(this);
+        work = true;
         menu = new Menu();
-    }
-
-    public void setPresenter(Presenter presenter) {
-        this.presenter = presenter;
-    }
-
-    @Override
-    public void start() {
-        System.out.println("Приветствую! Выберите пункт из меню: ");
-        while(work) {
-            printMenu();
-            execute();
-        }
     }
 
     @Override
@@ -34,12 +23,67 @@ public class Console implements View {
         System.out.println(text);
     }
 
-    private void printMenu() {
-        menu.printMenu();
+    @Override
+    public void start() {
+        System.out.println("Приветствую! Выберите пункт из меню: ");
+        while (work) {
+            printMenu();
+            execute();
+        }
     }
 
-    private void execute() {
-        int input = inputMenuValue();
-        if(input )
+    public void finish() {
+        System.out.println("Приятно было пообщаться");
+        work = false;
+    }
+
+    public void sortByDate() {
+        presenter.sortByDate();
+    }
+
+    public void getNotebookListInfo() {
+        presenter.getNotebookListInfo();
+    }
+
+    public void addNote() {
+        System.out.println("Введите дату записи");
+        String note = scanner.nextLine();
+        presenter.addNote(date);
+    }
+
+    private void execute(){
+        String line = scanner.nextLine();
+        if (checkTextForInt(line)){
+            int numCommand = Integer.parseInt(line);
+            if (checkCommand(numCommand)){
+                menu.execute(numCommand);
+            }
+        }
+    }
+
+    private boolean checkTextForInt(String text){
+        if (text.matches("[0-9]+")){
+            return true;
+        } else {
+            inputError();
+            return false;
+        }
+    }
+
+    private boolean checkCommand(int numCommand){
+        if (numCommand < menu.getSize()){
+            return true;
+        } else {
+            inputError();
+            return false;
+        }
+    }
+
+    private void printMenu() {
+        System.out.println(menu.menu());
+    }
+
+    private void inputError(){
+        System.out.println(INPUT_ERROR);
     }
 }
